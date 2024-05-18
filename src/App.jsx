@@ -24,8 +24,9 @@ const CustomMessage = (props) => {
 function App() {
   const [messages, setMessages] = useState([
     {
-      message: 'Hello, I am chatgpt',
-      sender: 'ChatGpt',
+      message:
+        'Hello, I your bot, I can help you and provide info regarding the LFX mentorship and about the Hyperledger community',
+      sender: 'Gemini',
     },
   ]);
   const [typing, setTyping] = useState(false);
@@ -42,9 +43,12 @@ function App() {
     setTyping(true);
 
     try {
-      const response = await axios.post('http://localhost:3001/generate', {
-        message,
-      });
+      const response = await axios.post(
+        'https://chatbot-gui-server.onrender.com/generate',
+        {
+          message,
+        },
+      );
 
       setMessages([
         ...newMessages,
