@@ -7,19 +7,11 @@ import {
   MessageList,
   MessageInput,
   TypingIndicator,
+  Avatar,
+  Message,
 } from '@chatscope/chat-ui-kit-react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import axios from 'axios';
-import ReactMarkdown from 'react-markdown';
-import rehypeRaw from 'rehype-raw';
-
-const CustomMessage = (props) => {
-  return (
-    <div className={`message ${props.sender}`}>
-      <ReactMarkdown rehypePlugins={[rehypeRaw]}>{props.message}</ReactMarkdown>
-    </div>
-  );
-};
 
 function App() {
   const [messages, setMessages] = useState([
@@ -72,29 +64,41 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <div style={{ position: 'relative', height: '600px', width: '700px' }}>
-        <MainContainer>
-          <ChatContainer>
-            <MessageList
-              scrollBehavior="smooth"
-              typingIndicator={
-                typing ? <TypingIndicator content="Typing" /> : null
-              }
-            >
-              {messages.map((msg, i) => (
-                <CustomMessage
-                  key={i}
-                  message={msg.message}
-                  sender={msg.sender}
+    <MainContainer className="min-h-full min-w-full">
+      <ChatContainer className='h-screen'>
+        <MessageList
+          scrollBehavior="smooth"
+          typingIndicator={typing ? <TypingIndicator content="Typing" /> : null}
+          className="py-1"
+        >
+          {messages.map((msg, i) => {
+            return (
+              <Message
+                key={i}
+                model={{
+                  direction: msg.sender === 'Gemini' ? 'incoming' : 'outgoing',
+                  message: msg.message,
+                  position: 'single',
+                  sender: 'bot',
+                }}
+              >
+                <Avatar
+                  name="bot"
+                  src="https://api.dicebear.com/8.x/bottts/svg?seed=Felix"
                 />
-              ))}
-            </MessageList>
-            <MessageInput placeholder="Type Message here" onSend={handleSend} />
-          </ChatContainer>
-        </MainContainer>
-      </div>
-    </div>
+              </Message>
+            );
+          })}
+        </MessageList>
+        <MessageInput
+          placeholder="Type Message here"
+          onSend={handleSend}
+          autoFocus
+          fancyScroll
+          attachButton={false}
+        />
+      </ChatContainer>
+    </MainContainer>
   );
 }
 
